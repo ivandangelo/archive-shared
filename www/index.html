@@ -10,8 +10,9 @@
             * Disables use of inline scripts in order to mitigate risk of XSS vulnerabilities. To change this:
                 * Enable inline JS: add 'unsafe-inline' to default-src
         -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *">
+    <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *">-->
 
+    <script src="https://kit.fontawesome.com/7dcaa3b6ad.js" crossorigin="anonymous"></script>
     <!-- Required meta tags-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
@@ -52,7 +53,7 @@
                 <div class="toolbar toolbar-bottom">
                     <div class="toolbar-inner">
                     <!-- Toolbar links -->
-                    <a href="/me/" class="link">Yo</a>
+                    <a href="/me/" class="link"><i class="far fa-user-circle fa-2x"></i></a>
                     </div>
                 </div>
         
@@ -72,6 +73,28 @@
     <script type="text/javascript" src="cordova.js"></script>
     <script type="text/javascript" src="lib/framework7/js/framework7.bundle.min.js"></script>
     <script type="text/javascript" src="js/my-app.js"></script>
+    <!-- The core Firebase JS SDK is always required and must be listed first -->
+    <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js"></script>
+
+<!-- TODO: Add SDKs for Firebase products that you want to use
+    https://firebase.google.com/docs/web/setup#available-libraries -->
+    <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-auth.js"></script>
+
+    <script>
+        // Your web app's Firebase configuration
+        var firebaseConfig = {
+            apiKey: "AIzaSyBMovclST3nTwo1ZrXvIlXvOfl9c12RE24",
+            authDomain: "shared-archive-comit.firebaseapp.com",
+            databaseURL: "https://shared-archive-comit.firebaseio.com",
+            projectId: "shared-archive-comit",
+            storageBucket: "shared-archive-comit.appspot.com",
+            messagingSenderId: "3996330263",
+            appId: "1:3996330263:web:f67ada587ad5f6c71aaf52"
+        };
+        // Initialize Firebase
+        firebase.initializeApp(firebaseConfig);
+    </script>
+
 </body>
 
 </html>

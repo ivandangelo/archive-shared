@@ -3,31 +3,123 @@
     <div class="navbar">
         <div class="navbar-bg"></div>
         <div class="navbar-inner">
-          <div class="left"></div>
-          <div class="title">Archive Shared</div>
-          <div class="subnavbar">
-            <div class="subnavbar-inner">
-              <div class="segmented segmented-raised">
-                <a class="button tab-link tab-link-active" href="#tab1">Iniciar Seccion</a>
-                <a class="button tab-link" href="#tab2">Registrarse</a>
-              </div>
+            <div class="left">
+                <a href="#" class="link back">
+                    <i class="icon icon-back"></i>
+                    <span class="ios-only">Back</span>
+                </a>
             </div>
-          </div>
+            <div class="title">Archive Shared</div>
+            <div class="subnavbar">
+                <div class="subnavbar-inner">
+                    <div class="segmented segmented-raised">
+                        <a class="button tab-link tab-link-active" href="#login">Iniciar Seccion</a>
+                        <a class="button tab-link" href="#regis">Registrarse</a>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="page-content hide-navbar-on-scroll">
+    </div>
+    <div class="page-content hide-navbar-on-scroll">
         <div class="tabs">
-          <div class="tab tab-active" id="tab1">
-            <div class="block">
-              <p>Lorem ipsum dolor sit amet...</p>
+            <div class="tab tab-active" id="login">
+                <div class="block">
+                    <div class="list inline-labels"><!--no-hairlines-md-->
+                        <ul>
+                            <li class="item-content item-input">
+                                <div class="item-media">
+                                    <!--<i class="icon demo-list-icon"></i>-->
+                                    <i class="far fa-envelope fa-2x"></i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-input-wrap">
+                                        <input type="email" placeholder="Correo electronico">
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                                </div>
+                            </li>
+                            <li class="item-content item-input">
+                                <div class="item-media">
+                                    <i class="fas fa-unlock-alt fa-2x"></i>
+                                </div>
+                                <div class="item-inner">
+                                    <div class="item-input-wrap">
+                                        <input type="password" placeholder="Contraseña">
+                                        <span class="input-clear-button"></span>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                    <div class="block">
+                        <div class="row">
+                            <button id="btnLogin" class="col button button-fill">Iniciar secion</button>
+                        </div>
+                    </div>
+                </div>
             </div>
-          </div>
-          <div class="tab" id="tab2">
-            <div class="block">
-              <p>Donec iaculis posuere massa sed dignissim...</p>
-            </div>
-          </div>
+            <div class="tab" id="regis">
+                <div class="list inline-labels"><!--no-hairlines-md-->
+                    <ul>
+                        <li class="item-content item-input">
+                            <div class="item-media">
+                                <!--<i class="icon demo-list-icon"></i>-->
+                                <i class="far fa-user-circle fa-2x"></i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-input-wrap">
+                                    <input type="text" placeholder="Apodo">
+                                    <span class="input-clear-button"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input">
+                            <div class="item-media">
+                                <i class="far fa-envelope fa-2x"></i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-input-wrap">
+                                    <input type="email" placeholder="Correo electronico">
+                                    <span class="input-clear-button"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input">
+                            <div class="item-media">
+                                <i class="fas fa-unlock-alt fa-2x"></i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-input-wrap">
+                                    <input type="password" placeholder="Contraseña">
+                                    <span class="input-clear-button"></span>
+                                </div>
+                            </div>
+                        </li>
+                        <li class="item-content item-input">
+                            <div class="item-media">
+                                <i class="fas fa-unlock-alt fa-2x"></i>
+                            </div>
+                            <div class="item-inner">
+                                <div class="item-input-wrap">
+                                    <input type="password" placeholder="Confirmar contraseña">
+                                    <span class="input-clear-button"></span>
+                                </div>
+                            </div>
+                        </li>
+                    </div>
+                    <div class="block">
+                        <div class="row">
+                            <button id="btnConfirmar" class="col button button-fill">Registrarse</button>
+                        </div>
+                    </div>
+                </div>
+
+<!--
+        <div class="block">
+            cosas comunes a los dos tab
 
         </div>
-      </div>
+-->
+    </div>
+
 </div>
