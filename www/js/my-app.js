@@ -34,7 +34,9 @@ var app = new Framework7({
     // ... other parameters
   });
 
+
 var mainView = app.views.create('.view-main');
+
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
@@ -54,16 +56,18 @@ $$(document).on('page:init', function (e) {
 $$(document).on('page:init', '.page[data-name="regis_login_panel"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
     console.log('regis_login_panel.html');
-    app.toolbar.show('.toolbar');
+    
 })
 
 $$(document).on('page:init', '.page[data-name="me"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
     console.log('me.html');
-    app.toolbar.show('.toolbar');
+   
+
 })
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
     console.log('index.html');
+
 })
