@@ -37,10 +37,33 @@ var app = new Framework7({
 
 var mainView = app.views.create('.view-main');
 
+function downloadFile() {
+    var fileTransfer = new FileTransfer();
+    var uri = encodeURI("http://s14.postimg.org/i8qvaxyup/bitcoin1.jpg");
+    var fileURL =  "///storage/emulated/0/DCIM/myFile";
+
+    fileTransfer.download(uri, fileURL, function(entry) {
+            console.log("download complete: " + entry.toURL());
+        },
+
+        function(error) {
+            console.log("download error source " + error.source);
+            console.log("download error target " + error.target);
+            console.log("download error code" + error.code);
+        },
+
+        false, {
+            headers: {
+                "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
+            }
+        }
+        );
+}
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
+    //console.log(FileTransfer);
 
 });
 
@@ -69,5 +92,8 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
     console.log('index.html');
+    $$('#uploadFile').on('click',uploadFile);
+    $$('#downloadFile').on('click',downloadFile);
+
 
 })
