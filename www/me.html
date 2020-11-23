@@ -13,17 +13,28 @@
     <div class="toolbar tabbar tabbar-labels toolbar-bottom">
         <div class="toolbar-inner">
             
-            <a href="/index/" class="tab-link">
-                <i class="fas fa-location-arrow fa-2x"></i>
-                <span class="tabbar-label">Transferencia</span>
-            </a>
+            
+            <p id="" href="" class="link">
+                <!--
+                <input type="file" id="inUp" class="" multiple>
+                
+                <i class="fas fa-cloud-upload-alt fa-2x"></i>
+                -->
 
-            <a href="/me/" class="tab-link tab-link-active">
-                <!-- Different icons for iOS and MD themes -->
-                <i class="far fa-user-circle fa-2x"></i>
-                <!-- Label text -->
-                <span class="tabbar-label">Yo</span>
+                <input class="" type="file" id="in" multiple style="display:none;">
+                <label for="in">
+                    <span class="icon f7-icons size-22">cloud_upload</span>
+                    <span class="tabbar-label">Subir</span>
+                </label>
+                
+
+            </p>
+
+            <a id="" href="" class="link"><!--class="tab-link tab-link-active"-->
+                <i class="icon f7-icons size-22">cloud_download</i>
+                <span class="tabbar-label">Descargar</span>
             </a>
+            
 
             <!--
             <a href="#tab-3" class="tab-link">
@@ -37,9 +48,26 @@
 
     <div class="page-content">
           <div class="display-flex flex-direction-column justify-content-center align-items-center">
-                <div class=""><img style="border-radius: 50%;width: 100px; height: 100px;" src="img/profile.png" alt=""></div>
-                <div style="width: 15%;" class=" button button-outline button-round"><a href="/regis_login_panel/">Pulse para registrarse</a></div>
+                <div class=""><img id="setImg"  style="border-radius: 50%;width: 100px; height: 100px;" src="img/profile.png" alt=""></div>
+                <p id="apodo">APODO</p>
+                <p id="mail">MAIL</p>
+
           </div>
           <hr>
-    </div>
+        <div class="treeview">
+            <div class="treeview-item">
+                <div class="treeview-item-root">
+                    <div class="treeview-item-content">
+                        <label class="checkbox">
+                            <input type="checkbox">
+                            <i class="icon-checkbox"></i>
+                        </label>
+                        <i class="icon f7-icons">photo_fill</i>
+                        <div class="treeview-item-label">avatar.jpg</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
 </div>

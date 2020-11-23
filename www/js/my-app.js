@@ -25,11 +25,8 @@ var app = new Framework7({
       {
         path: '/index/',
         url: 'index.html',
-      },
-      {
-        path: '/regis_login_panel/',
-        url: 'regis_login_panel.html',
-      },
+      }
+
     ]
     // ... other parameters
   });
@@ -37,27 +34,15 @@ var app = new Framework7({
 
 var mainView = app.views.create('.view-main');
 
-function downloadFile() {
-    var fileTransfer = new FileTransfer();
-    var uri = encodeURI("http://s14.postimg.org/i8qvaxyup/bitcoin1.jpg");
-    var fileURL =  "///storage/emulated/0/DCIM/myFile";
+function returnFileSize(number) {
+    if(number < 1024) {
+        return number + 'bytes';
+    } else if(number >= 1024 && number < 1048576) {
+        return (number/1024).toFixed(1) + 'KB';
+    } else if(number >= 1048576) {
+        return (number/1048576).toFixed(1) + 'MB';
+    }
 
-    fileTransfer.download(uri, fileURL, function(entry) {
-            console.log("download complete: " + entry.toURL());
-        },
-
-        function(error) {
-            console.log("download error source " + error.source);
-            console.log("download error target " + error.target);
-            console.log("download error code" + error.code);
-        },
-
-        false, {
-            headers: {
-                "Authorization": "Basic dGVzdHVzZXJuYW1lOnRlc3RwYXNzd29yZA=="
-            }
-        }
-        );
 }
 
 // Handle Cordova Device Ready Event
@@ -76,24 +61,74 @@ $$(document).on('page:init', function (e) {
 */
 
 // Option 2. Using live 'page:init' event handlers for each page
-$$(document).on('page:init', '.page[data-name="regis_login_panel"]', function (e) {
-    // Do something here when page with data-name="about" attribute loaded and initialized
-    console.log('regis_login_panel.html');
-    
-})
 
 $$(document).on('page:init', '.page[data-name="me"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
     console.log('me.html');
-   
+    $$('#setImg').on('click', function(){
+        //console.log('img seteada');
+
+    } );
+    $$('#in').on('change',function(){
+
+
+        const obj = $$(this)[0];
+        const currentFiles = obj.files;
+        console.log(currentFiles);
+        var icon = '';
+
+        if(currentFiles.length!=0){
+            for(let i=0;i<currentFiles.length;i++){
+                //console.log(currentFiles[i].name);
+                var typeFile = currentFiles[i].type;
+
+                /*if(typeFile.includes('image')){
+                    console.log('imagen');
+                    icon='photo';
+
+                }else if(typeFile.includes('video')){
+                    icon='film';
+
+                }else if(typeFile.includes('text')){
+                    icon='doc_plaintext';
+    
+
+                }else if(typeFile.includes('pdf')){
+                    icon='doc_richtext'
+    
+
+                }else{
+                    //default icon
+                    icon='doc'
+
+                }
+
+                expected output
+                imagen
+                video
+                txt
+                pdf
+                */
+
+
+            }
+
+
+        }
+
+
+
+
+    } );
+
 
 })
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
     console.log('index.html');
-    $$('#uploadFile').on('click',uploadFile);
-    $$('#downloadFile').on('click',downloadFile);
+
+
 
 
 })

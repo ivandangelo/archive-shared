@@ -12,7 +12,6 @@
         -->
     <!--<meta http-equiv="Content-Security-Policy" content="default-src 'self' data: gap: https://ssl.gstatic.com 'unsafe-eval' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; media-src *">-->
 
-    <script src="https://kit.fontawesome.com/7dcaa3b6ad.js" crossorigin="anonymous"></script>
     <!-- Required meta tags-->
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no, minimal-ui, viewport-fit=cover">
@@ -26,92 +25,164 @@
     <!-- Path to icons -->
     <link rel="stylesheet" href="css/icons.css">
     <!-- Path to your custom app styles-->
-    <link rel="stylesheet" href="css/app.css">
+    <link rel="stylesheet" href="css/mystyles.css">
 </head>
 
 <body>
     <div id="app">
         <!-- Statusbar overlay -->
         <div class="statusbar"></div>
-    
+
         <!-- Your main view, should have "view-main" class -->
         <div class="view view-main">
             <!-- Initial Page, "data-name" contains page name -->
             <div data-name="index" class="page">
-    
-                <!-- Top Navbar -->
-                <div class="navbar">
-                    <div class="navbar-bg"></div>
-                    <div class="navbar-inner">
-                        <!--<div class="left"><i class="icon icon-back"></i></div>-->
-                        <div class="title">Archive Shared</div>
-                        <!--<div class="right"><i class="icon icon-forward"></i></div>-->
-                    </div>
-                </div>
-
 
                 <div class="toolbar tabbar tabbar-labels toolbar-bottom">
                     <div class="toolbar-inner">
-                        
-                        <a href="/index/" class="tab-link tab-link-active">
-                            <i class="fas fa-location-arrow fa-2x"></i>
-                            <span id="" class="tabbar-label">Transferencia</span>
-                        </a>
 
-                        <a href="/me/" class="tab-link">
+                        <!--
+                        <a href="/index/" class="tab-link">
+                            <i class="fas fa-location-arrow fa-2x"></i>
+                            <span class="tabbar-label">Transferencia</span>
+                        </a>
+                        -->
+
+                        <a href="/regis_login_pane/" class="tab-link tab-link-active">
                             <!-- Different icons for iOS and MD themes -->
-                            <i class="far fa-user-circle fa-2x"></i>
+                            <i class="icon f7-icons size-22">person_circle</i>
                             <!-- Label text -->
-                            <span class="tabbar-label">Yo</span>
+                            <span class="tabbar-label">Inicio</span>
                         </a>
 
                         <!--
                         <a href="#tab-3" class="tab-link">
-                            <i class="icon f7-icons if-not-md">cloud_fill</i>
-                            <i class="icon material-icons md-only">file_upload</i>
-                            <span class="tabbar-label">Upload</span>
+                        <i class="icon f7-icons if-not-md">cloud_fill</i>
+                        <i class="icon material-icons md-only">file_upload</i>
+                        <span class="tabbar-label">Upload</span>
                         </a>
                         -->
                     </div>
                 </div>
 
-
-        
-                <!-- Toolbar
-                <div class="toolbar toolbar-bottom">
-                    <div class="toolbar-inner">
-                    
-                    <a href="/me/" class="link"><i class="far fa-user-circle fa-2x"></i></a>
+                <div class="navbar">
+                    <div class="navbar-bg"></div>
+                    <div class="navbar-inner">
+                        <!--
+                        <div class="left">
+                            <a href="#" class="link back">
+                                <i class="icon icon-back"></i>
+                                <span class="ios-only">Back</span>
+                            </a>
+                        </div>
+                        -->
+                        <div class="title">Archive Shared</div>
+                        <div class="subnavbar">
+                            <div class="subnavbar-inner">
+                                <div class="segmented segmented-raised">
+                                    <a class="button tab-link tab-link-active" href="#login">Iniciar Seccion</a>
+                                    <a class="button tab-link" href="#regis">Registrarse</a>
+                                </div>
+                            </div>
+                        </div>
                     </div>
                 </div>
-                -->
-        
-                <!-- Scrollable page content -->
-                <div class="page-content">
-                    <div class="list inline-labels">
-                        <ul>
-                            <li class="item-content item-input">
-                                <div class="item-media">
-                                    <i class="fas fa-desktop fa-2x"></i>
+                <div class="page-content hide-navbar-on-scroll">
+                    <div class="tabs">
+                        <div class="tab tab-active" id="login">
+                            <div class="block">
+                                <div class="list inline-labels"><!--no-hairlines-md-->
+                                    <ul>
+                                        <li class="item-content item-input">
+                                            <div class="item-media">
+                                                <!--<i class="icon demo-list-icon"></i>-->
+                                                <i class="icon f7-icons size-22">envelope</i>
+                                            </div>
+                                            <div class="item-inner">
+                                                <div class="item-input-wrap">
+                                                    <input type="email" placeholder="Correo electronico">
+                                                    <span class="input-clear-button"></span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                        <li class="item-content item-input">
+                                            <div class="item-media">
+                                                <i class="icon f7-icons size-22">bag</i>
+                                            </div>
+                                            <div class="item-inner">
+                                                <div class="item-input-wrap">
+                                                    <input type="password" placeholder="Contraseña">
+                                                    <span class="input-clear-button"></span>
+                                                </div>
+                                            </div>
+                                        </li>
+                                    </ul>
                                 </div>
-                                <div class="item-inner">
-                                    <div style="width: 100%;" id="uploadFile" class="button button-fill">SUBIR</div>
+                                <div class="block">
+                                    <div class="row">
+                                        <a href="/me/" id="btnLogin" class="col button button-fill">Iniciar secion</a>
+                                    </div>
                                 </div>
-                            </li>
-                            <li class="item-content item-input">
-                                <div class="item-media">
-                                    <i class="fas fa-desktop fa-2x"></i>
+                            </div>
+                        </div>
+                        <div class="tab" id="regis">
+                            <div class="list inline-labels"><!--no-hairlines-md-->
+                                <ul>
+                                    <li class="item-content item-input">
+                                        <div class="item-media">
+                                            <!--<i class="icon demo-list-icon"></i>-->
+                                            <i class="icon f7-icons size-22">person_circle</i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-input-wrap">
+                                                <input type="text" placeholder="Apodo">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="item-content item-input">
+                                        <div class="item-media">
+                                            <i class="icon f7-icons size-22">envelope</i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-input-wrap">
+                                                <input type="email" placeholder="Correo electronico">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="item-content item-input">
+                                        <div class="item-media">
+                                            <i class="icon f7-icons size-22">bag</i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-input-wrap">
+                                                <input type="password" placeholder="Contraseña">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </li>
+                                    <li class="item-content item-input">
+                                        <div class="item-media">
+                                            <i class="icon f7-icons size-22">bag</i>
+                                        </div>
+                                        <div class="item-inner">
+                                            <div class="item-input-wrap">
+                                                <input type="password" placeholder="Confirmar contraseña">
+                                                <span class="input-clear-button"></span>
+                                            </div>
+                                        </div>
+                                    </li>
                                 </div>
-                                <div class="item-inner">
-                                    <div style="width: 100%;" id="downloadFile" class="button button-fill">DESCARGAR</div>
+                                <div class="block">
+                                    <div class="row">
+                                        <a href="/me/" id="btnConfirmar" class="col button button-fill">Registrarse</a>
+                                    </div>
                                 </div>
-                            </li>
-                        </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
-        </div>
-    </div>
 
 
     <script type="text/javascript" src="cordova.js"></script>
