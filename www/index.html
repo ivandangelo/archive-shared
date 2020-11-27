@@ -80,7 +80,7 @@
                         <div class="subnavbar">
                             <div class="subnavbar-inner">
                                 <div class="segmented segmented-raised">
-                                    <a class="button tab-link tab-link-active" href="#login">Iniciar Seccion</a>
+                                    <a class="button tab-link tab-link-active" href="#login">Iniciar sesion</a>
                                     <a class="button tab-link" href="#regis">Registrarse</a>
                                 </div>
                             </div>
@@ -100,7 +100,7 @@
                                             </div>
                                             <div class="item-inner">
                                                 <div class="item-input-wrap">
-                                                    <input type="email" placeholder="Correo electronico">
+                                                    <input id="mail" type="email" placeholder="Correo electronico">
                                                     <span class="input-clear-button"></span>
                                                 </div>
                                             </div>
@@ -111,7 +111,7 @@
                                             </div>
                                             <div class="item-inner">
                                                 <div class="item-input-wrap">
-                                                    <input type="password" placeholder="Contraseña">
+                                                    <input id="pass" type="password" placeholder="Contraseña">
                                                     <span class="input-clear-button"></span>
                                                 </div>
                                             </div>
@@ -120,7 +120,7 @@
                                 </div>
                                 <div class="block">
                                     <div class="row">
-                                        <a href="/me/" id="btnLogin" class="col button button-fill">Iniciar secion</a>
+                                        <a href="" id="btnLogin" class="col button button-fill">Iniciar sesion</a>
                                     </div>
                                 </div>
                             </div>
@@ -135,7 +135,7 @@
                                         </div>
                                         <div class="item-inner">
                                             <div class="item-input-wrap">
-                                                <input type="text" placeholder="Apodo">
+                                                <input id="apodo" type="text" placeholder="Apodo">
                                                 <span class="input-clear-button"></span>
                                             </div>
                                         </div>
@@ -146,7 +146,7 @@
                                         </div>
                                         <div class="item-inner">
                                             <div class="item-input-wrap">
-                                                <input type="email" placeholder="Correo electronico">
+                                                <input id="mailRegis" type="email" placeholder="Correo electronico">
                                                 <span class="input-clear-button"></span>
                                             </div>
                                         </div>
@@ -157,7 +157,7 @@
                                         </div>
                                         <div class="item-inner">
                                             <div class="item-input-wrap">
-                                                <input type="password" placeholder="Contraseña">
+                                                <input id="passRegis" type="password" placeholder="Contraseña">
                                                 <span class="input-clear-button"></span>
                                             </div>
                                         </div>
@@ -168,7 +168,7 @@
                                         </div>
                                         <div class="item-inner">
                                             <div class="item-input-wrap">
-                                                <input type="password" placeholder="Confirmar contraseña">
+                                                <input id="confPassRegis" type="password" placeholder="Confirmar contraseña">
                                                 <span class="input-clear-button"></span>
                                             </div>
                                         </div>
@@ -176,7 +176,7 @@
                                 </div>
                                 <div class="block">
                                     <div class="row">
-                                        <a href="/me/" id="btnConfirmar" class="col button button-fill">Registrarse</a>
+                                        <a href="" id="btnRegis" id="btnConfirmar" class="col button button-fill">Registrarse</a>
                                     </div>
                                 </div>
                             </div>
@@ -185,18 +185,20 @@
                 </div>
 
 
-    <script type="text/javascript" src="cordova.js"></script>
-    <script type="text/javascript" src="lib/framework7/js/framework7.bundle.min.js"></script>
-    <script type="text/javascript" src="js/my-app.js"></script>
+
     <!-- The core Firebase JS SDK is always required and must be listed first -->
     <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-app.js"></script>
 
 <!-- TODO: Add SDKs for Firebase products that you want to use
     https://firebase.google.com/docs/web/setup#available-libraries -->
     <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-storage.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/7.23.0/firebase-firestore.js"></script>
+
 
     <script>
         // Your web app's Firebase configuration
+        
         var firebaseConfig = {
             apiKey: "AIzaSyBMovclST3nTwo1ZrXvIlXvOfl9c12RE24",
             authDomain: "shared-archive-comit.firebaseapp.com",
@@ -206,9 +208,16 @@
             messagingSenderId: "3996330263",
             appId: "1:3996330263:web:f67ada587ad5f6c71aaf52"
         };
+
         // Initialize Firebase
         firebase.initializeApp(firebaseConfig);
+        
     </script>
+
+    <script type="text/javascript" src="cordova.js"></script>
+    <script type="text/javascript" src="lib/framework7/js/framework7.bundle.min.js"></script>
+    <script type="text/javascript" src="js/my-app.js"></script>
+
 
 </body>
 
