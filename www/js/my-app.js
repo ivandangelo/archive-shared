@@ -33,8 +33,8 @@ var app = new Framework7({
 
 
 var mainView = app.views.create('.view-main');
-var storage = firebase.storage();
 var db = firebase.firestore();
+var storageRef = firebase.storage().ref();
 var emailActual = '';
 //console.log(colUsuarios);
 //console.log(colArchivos);
@@ -124,6 +124,8 @@ $$(document).on('page:init', function (e) {
 $$(document).on('page:init', '.page[data-name="me"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
     console.log('me.html');
+    //console.log(emailActual);
+    colRef = db.collection('usuarios/'+emailActual+'/archivos');
     //console.log(colUsuarios.doc(emailActual).collection('archivos'));
 
 
@@ -143,6 +145,10 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
         var sizeFile = '';
         var msj='';
         var elementoAInsertar= '';
+        //console.log(archivosUsuarioRef.fullPath);
+        //console.log('email actual'+emailActual);
+        //console.log(archivoRef);
+        //console.log('bucket '+archivoRef.bucket+' name '+archivoRef.name+' fullpath '+archivoRef.fullPath);
 
         if(currentFiles.length!=0){
             for(let i=0;i<currentFiles.length;i++){
@@ -151,15 +157,58 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
                 nameFile = currentFiles[i].name;
                 sizeFile = returnFileSize(currentFiles[i].size);
                 msj=nameFile+' '+sizeFile;
+
+
                 //console.log(msj);
 
-                //agregando documentos a la subcoleccion okk
-                colRef = db.collection('usuarios/'+emailActual+'/archivos');
-                docFile={
-                    url:i
+                //agregando documento a storage
+                archivosUsuarioRef = storageRef.child(emailActual);
+                var uploadTask = archivosUsuarioRef.put(currentFiles[i]);
 
-                };
-                colRef.doc(nameFile).set(docFile);
+                // Register three observers:
+                // 1. 'state_changed' observer, called any time the state changes
+                // 2. Error observer, called on failure
+                // 3. Completion observer, called on successful completion
+                uploadTask.on('state_changed',function(snapshot){//1
+                    // Observe state change events such as progress, pause, and resume
+                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
+                    console.log('upload is '+progress+'% done');
+                    switch(snapshot.state){
+                        case firebase.storage.TaskState.PAUSED:
+                            console.log('upload is paused');
+                            break;
+                        case firebase.storage.TaskState.RUNNING:
+                            // console.log('upload is running'); se dispara
+                            break;
+
+
+                    }
+                        
+
+
+                }, function(error){
+                    // Handle unsuccessful uploads
+
+                }, function(){
+                    // Handle successful uploads on complete
+                    // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                    uploadTask.snapshot.ref.getDownloadURL()
+                        .then(function(downloadURL){
+                            console.log('file available at '+downloadURL);
+                            docFile={
+                                url: downloadURL,
+                                type: typeFile,
+                                size: sizeFile
+
+                            };
+                            colRef.doc(nameFile).set(docFile);
+
+                    });
+
+
+                });
+
 
                 if(typeFile.includes('image')){
                     //console.log('imagen');
