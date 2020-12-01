@@ -118,7 +118,6 @@ function logIn(email,pass){
              var errorMessage = error.message;
              console.log(errorCode+' '+errorMessage);
 
-
         });
 
 }
