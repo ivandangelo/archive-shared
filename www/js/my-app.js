@@ -92,6 +92,25 @@ function logIn(email,pass){
         .then(function() {
             emailActual = email;
             mainView.router.navigate('/me/');
+            //colRefDatosUser = db.doc('usuarios/'+emailActual);
+            //colRefArchivosUser = db.collection('usuarios/'+emailActual+'/archivos');
+            var colRefDatosUser = db.collection('usuarios').doc(emailActual);
+            var colRefArchivosUser = db.collection('usuarios').doc(emailActual).collection('archivos');
+            console.log(colRefDatosUser);
+            console.log(colRefArchivosUser);
+            /*colRefDatosUser.get()
+                .then(function(querySnapshot){
+                    querySnapshot.forEach(function(doc){
+                        console.log('id '+doc.id+' apodo '+doc.data().apodo);
+                    });
+
+                })
+                .catch(function(error){
+                    console.log("Error getting documents: ", error);
+
+
+                });*/
+
 
         })
         .catch(function(error) {
@@ -162,7 +181,8 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
                 //console.log(msj);
 
                 //agregando documento a storage
-                archivosUsuarioRef = storageRef.child(emailActual);
+                var path = emailActual+'/'+nameFile; //i.e ivan@mail.com/cv.docx
+                archivosUsuarioRef = storageRef.child(path);
                 var uploadTask = archivosUsuarioRef.put(currentFiles[i]);
 
                 // Register three observers:
@@ -266,12 +286,11 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
         pass = $$('#pass').val();
 
         //console.log(email+' '+pass);
-
         logIn(email,pass);
 
 
 
-    } );
+    });
 
     $$('#btnRegis').on('click',function(){
         var email = $$('#mailRegis').val();
@@ -286,6 +305,5 @@ $$(document).on('page:init', '.page[data-name="index"]', function (e) {
         }
 
     });
-
 
 });
