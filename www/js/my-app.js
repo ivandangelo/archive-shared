@@ -88,28 +88,12 @@ function createUser(email,pass,apodo){
 
 function logIn(email,pass){
 
+    emailActual = email;
     firebase.auth().signInWithEmailAndPassword(email, pass)
         .then(function() {
-            emailActual = email;
             mainView.router.navigate('/me/');
             //colRefDatosUser = db.doc('usuarios/'+emailActual);
             //colRefArchivosUser = db.collection('usuarios/'+emailActual+'/archivos');
-            var colRefDatosUser = db.collection('usuarios').doc(emailActual);
-            var colRefArchivosUser = db.collection('usuarios').doc(emailActual).collection('archivos');
-            console.log(colRefDatosUser);
-            console.log(colRefArchivosUser);
-            /*colRefDatosUser.get()
-                .then(function(querySnapshot){
-                    querySnapshot.forEach(function(doc){
-                        console.log('id '+doc.id+' apodo '+doc.data().apodo);
-                    });
-
-                })
-                .catch(function(error){
-                    console.log("Error getting documents: ", error);
-
-
-                });*/
 
 
         })
@@ -119,6 +103,77 @@ function logIn(email,pass){
              console.log(errorCode+' '+errorMessage);
 
         });
+        //var colRefDatosUser = db.collection('usuarios').doc(emailActual);
+        //var colRefArchivosUser = db.collection('usuarios').doc(emailActual).collection('archivos');
+        //console.log(colRefDatosUser);
+        //console.log(colRefArchivosUser);
+        recuperarDatosUsuarioLogeado();
+
+
+
+}
+function recuperarDatosUsuarioLogeado(){
+    /*db.collection('usuarios').get()
+    .then(function(querySnapshot){
+        querySnapshot.forEach(function(doc){
+            console.log('id '+doc.id+' apodo '+doc.data().apodo);
+        });
+        //console.log(querySnapshot);
+
+    }).catch(function(error){
+        console.log("error "+error);
+
+    });*/
+    //console.log(emailActual);
+    var msj = '';
+    var icon = '';
+    var name = '';
+    var size = '';
+    var type = '';
+    var url = '';
+    var elementoAInsertar = '';
+    db.collection('usuarios').doc(emailActual).collection('archivos').get()
+    .then(function(querySnapshot){
+        querySnapshot.forEach(function(doc){
+            name = doc.id;
+            size = doc.data().size;
+            type = doc.data().type;
+            url = doc.data().url;
+            msj = name+' '+size;
+            //console.log('id '+doc.id+' size '+doc.data().size+' type '+doc.data().type+' url '+doc.data().url);
+            if(type.includes('image')){
+                //console.log('imagen');
+                icon='photo';
+
+            }else if(type.includes('video')){
+                icon='film';
+
+            }else if(type.includes('text')){
+                icon='doc_plaintext';
+
+
+            }else if(type.includes('pdf')){
+                icon='doc_richtext'
+
+
+            }else{
+                //default icon
+                icon='doc'
+
+            }
+
+
+            elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
+            $$('#arbol').append(elementoAInsertar);
+        });
+
+        //console.log(querySnapshot);
+
+    }).catch(function(error){
+        console.log("error "+error);
+
+    });
+
 
 }
 
@@ -163,6 +218,7 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
         var sizeFile = '';
         var msj='';
         var elementoAInsertar= '';
+        var verSiExiste
         //console.log(archivosUsuarioRef.fullPath);
         //console.log('email actual'+emailActual);
         //console.log(archivoRef);
@@ -171,95 +227,107 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
         if(currentFiles.length!=0){
             for(let i=0;i<currentFiles.length;i++){
                 //console.log(currentFiles[i].name);
+
                 typeFile = currentFiles[i].type;
                 nameFile = currentFiles[i].name;
                 sizeFile = returnFileSize(currentFiles[i].size);
                 msj=nameFile+' '+sizeFile;
 
+                db.collection('usuarios').doc(emailActual).collection('archivos').doc(nameFile).get()
+                    .then(function(doc){
+                        if(!doc.exists){
+                            console.log(emailActual+' '+nameFile);
+                            if(typeFile.includes('image')){
+                                //console.log('imagen');
+                                icon='photo';
 
-                //console.log(msj);
+                            }else if(typeFile.includes('video')){
+                                icon='film';
 
-                //agregando documento a storage
-                var path = emailActual+'/'+nameFile; //i.e ivan@mail.com/cv.docx
-                archivosUsuarioRef = storageRef.child(path);
-                var uploadTask = archivosUsuarioRef.put(currentFiles[i]);
+                            }else if(typeFile.includes('text')){
+                                icon='doc_plaintext';
+                
 
-                // Register three observers:
-                // 1. 'state_changed' observer, called any time the state changes
-                // 2. Error observer, called on failure
-                // 3. Completion observer, called on successful completion
-                uploadTask.on('state_changed',function(snapshot){//1
-                    // Observe state change events such as progress, pause, and resume
-                    // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                    var progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
-                    console.log('upload is '+progress+'% done');
-                    switch(snapshot.state){
-                        case firebase.storage.TaskState.PAUSED:
-                            console.log('upload is paused');
-                            break;
-                        case firebase.storage.TaskState.RUNNING:
-                            // console.log('upload is running'); se dispara
-                            break;
+                            }else if(typeFile.includes('pdf')){
+                                icon='doc_richtext'
+                
+
+                            }else{
+                                //default icon
+                                icon='doc'
+
+                            }
+                            //console.log(msj);
+
+                            //agregando documento a storage
+                            var path = emailActual+'/'+nameFile; //i.e ivan@mail.com/cv.docx
+                            archivosUsuarioRef = storageRef.child(path);
+                            var uploadTask = archivosUsuarioRef.put(currentFiles[i]);
+                            // Register three observers:
+                            // 1. 'state_changed' observer, called any time the state changes
+                            // 2. Error observer, called on failure
+                            // 3. Completion observer, called on successful completion
+                            uploadTask.on('state_changed',function(snapshot){//1
+                                // Observe state change events such as progress, pause, and resume
+                                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+                                var progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
+                                console.log('upload is '+progress+'% done');
+                                switch(snapshot.state){
+                                    case firebase.storage.TaskState.PAUSED:
+                                        console.log('upload is paused');
+                                        break;
+                                    case firebase.storage.TaskState.RUNNING:
+                                        // console.log('upload is running'); se dispara
+                                        break;
 
 
-                    }
-                        
+                                }
+                                    
 
 
-                }, function(error){
-                    // Handle unsuccessful uploads
+                            }, function(error){
+                                // Handle unsuccessful uploads
 
-                }, function(){
-                    // Handle successful uploads on complete
-                    // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                    uploadTask.snapshot.ref.getDownloadURL()
-                        .then(function(downloadURL){
-                            console.log('file available at '+downloadURL);
-                            docFile={
-                                url: downloadURL,
-                                type: typeFile,
-                                size: sizeFile
+                            }, function(){
+                                // Handle successful uploads on complete
+                                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                                uploadTask.snapshot.ref.getDownloadURL()
+                                    .then(function(downloadURL){
+                                        console.log('file available at '+downloadURL);
+                                        docFile={
+                                            url: downloadURL,
+                                            type: typeFile,
+                                            size: sizeFile,
+                                            icon: icon
 
-                            };
-                            colRef.doc(nameFile).set(docFile);
+                                        };
+                                        colRef.doc(nameFile).set(docFile);
+
+                                });
+
+
+                            });
+                            elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
+                            $$('#arbol').append(elementoAInsertar);
+
+
+
+                        }else {
+                            console.log('el archivo existe');
+
+                        }
+                    })
+                    .catch(function(error){
 
                     });
 
-
-                });
-
-
-                if(typeFile.includes('image')){
-                    //console.log('imagen');
-                    icon='photo';
-
-                }else if(typeFile.includes('video')){
-                    icon='film';
-
-                }else if(typeFile.includes('text')){
-                    icon='doc_plaintext';
-    
-
-                }else if(typeFile.includes('pdf')){
-                    icon='doc_richtext'
-    
-
-                }else{
-                    //default icon
-                    icon='doc'
-
-                }
-
-                elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
-                $$('#arbol').append(elementoAInsertar);
-
-                /*
-                expected output
-                imagen
-                video
-                txt
-                pdf
-                */
+                
+                //expected output
+                //imagen
+                //video
+                //txt
+               //pdf
+                
 
 
             }
