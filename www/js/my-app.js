@@ -86,7 +86,7 @@ function createUser(email,pass,apodo){
 
 }
 
-function logIn(email,pass){
+async function logIn(email,pass){
 
     emailActual = email;
     firebase.auth().signInWithEmailAndPassword(email, pass)
@@ -107,7 +107,17 @@ function logIn(email,pass){
         //var colRefArchivosUser = db.collection('usuarios').doc(emailActual).collection('archivos');
         //console.log(colRefDatosUser);
         //console.log(colRefArchivosUser);
-        recuperarDatosUsuarioLogeado();
+        db.collection('usuarios').doc(emailActual).get().then(function(doc) {
+            if (doc.exists) {
+                //console.log('apodo '+doc.data().apodo);
+            } else {
+                // doc.data() will be undefined in this case
+                console.log("No such document!");
+            }
+        }).catch(function(error) {
+            console.log("Error getting document:", error);
+        });
+        await recuperarDatosUsuarioLogeado();
 
 
 
@@ -206,6 +216,19 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
         console.log('img seteada');
 
     } );*/
+
+    $$('#dwl').on('click',function(){
+        console.log('entrando a descargar');
+        $$('input[type=checkbox]:checked').each(function(){
+            console.log();
+
+
+        });
+
+
+    });//fin download
+
+
     $$('#in').on('change',function(){
 
 
@@ -335,10 +358,10 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
 
         }
 
+    });//fin #in
 
 
 
-    } );
 
 
 })
