@@ -86,12 +86,13 @@ function createUser(email,pass,apodo){
 
 }
 
-async function logIn(email,pass){
+function logIn(email,pass){
 
     emailActual = email;
     firebase.auth().signInWithEmailAndPassword(email, pass)
         .then(function() {
             mainView.router.navigate('/me/');
+            recuperarDatosUsuarioLogeado();
             //colRefDatosUser = db.doc('usuarios/'+emailActual);
             //colRefArchivosUser = db.collection('usuarios/'+emailActual+'/archivos');
 
@@ -117,7 +118,7 @@ async function logIn(email,pass){
         }).catch(function(error) {
             console.log("Error getting document:", error);
         });
-        await recuperarDatosUsuarioLogeado();
+        
 
 
 
@@ -173,7 +174,7 @@ function recuperarDatosUsuarioLogeado(){
             }
 
 
-            elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
+            elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input data-file="'+name+'" type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
             $$('#arbol').append(elementoAInsertar);
         });
 
@@ -186,6 +187,9 @@ function recuperarDatosUsuarioLogeado(){
 
 
 }
+
+
+
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
@@ -218,12 +222,38 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
     } );*/
 
     $$('#dwl').on('click',function(){
-        console.log('entrando a descargar');
-        $$('input[type=checkbox]:checked').each(function(){
-            console.log();
+
+        var name = ''
+        //console.log('entrando a descargar');
+        if($$('input[type=checkbox]:checked').length !=0){
 
 
-        });
+            $$('input[type=checkbox]:checked').each(function(){
+                name = $$(this).attr('data-file');
+                //console.log('nombre '+name+' email '+emailActual);
+                storageRef.child(emailActual+'/'+name).getDownloadURL().then(function(url){
+                    console.log(url);
+                    var xhr = new XMLHttpRequest();
+                    xhr.responseType = 'blob';
+                    xhr.onload = function(event){
+                        var blob = xhr.response;
+                    };
+                    xhr.open('GET', url);
+                    xhr.send();
+
+
+                }).catch(function(error){
+                    console.log('error '+error);
+
+                });
+
+
+            });
+
+
+        }else{
+            console.log('no seleccionaste ningun archivo')
+        }
 
 
     });//fin download
@@ -330,7 +360,7 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
 
 
                             });
-                            elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
+                            elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input data-file="'+nameFile+'" type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
                             $$('#arbol').append(elementoAInsertar);
 
 
