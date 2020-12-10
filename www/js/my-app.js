@@ -174,7 +174,7 @@ function recuperarDatosUsuarioLogeado(){
             }
 
 
-            elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input data-file="'+name+'" type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
+            elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input data-file="'+name+'" type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><a href="'+url+'" download="MyGoogleLogo">'+msj+'</a></div></div></div></div>';
             $$('#arbol').append(elementoAInsertar);
         });
 
