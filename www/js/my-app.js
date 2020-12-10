@@ -214,6 +214,7 @@ function downloadFileAux(name,url){
         }
 
     }
+    xhr.send();
 
 }
 function saveFile(name,blob){
@@ -223,7 +224,7 @@ function saveFile(name,blob){
         window.resolveLocalFileSystemURL( cordova.file.externalRootDirectory, function(dirEntry){
             //vamos a la raiz del sistema '/'
             console.log("root "+dirEntry);
-            dirEntry.geetDirectory('Download',{create:true, exclusive:false},function(dirEntry){
+            dirEntry.getDirectory('Download',{create:true, exclusive:false},function(dirEntry){
                 //vamos a la carpeta download
                 console.log("downloads "+dirEntry);
                 dirEntry.getFile(name,{create:true,exclusive:false}, function(fileEntry){
@@ -293,6 +294,19 @@ $$(document).on('page:init', function (e) {
 // Option 2. Using live 'page:init' event handlers for each page
 
 $$(document).on('page:init', '.page[data-name="me"]', function (e) {
+
+
+    $$('#btnSignOut').on('click',function(){
+        firebase.auth().signOut().then(function() {
+        // Sign-out successful.
+        console.log('deslogeado correctamente');
+        }).catch(function(error) {
+        // An error happened.
+        });
+
+
+
+    });
     // Do something here when page with data-name="about" attribute loaded and initialized
     console.log('me.html');
     //console.log(emailActual);
