@@ -188,6 +188,90 @@ function recuperarDatosUsuarioLogeado(){
 
 }
 
+function descargarArchivo(nombre){
+    storageRef.child(emailActual+'/'+nombre).getDownloadURL().then(function(url){
+        console.log(url);
+        downloadFileAux(nombre,url);
+
+
+    }).catch(function(error){
+        console.log('error '+error);
+
+    });
+
+
+}
+
+
+function downloadFileAux(name,url){
+    var xhr = new XMLHttpRequest();
+    xhr.open("GET",url);
+    xhr.responseType='blob';
+    xhr.onload=function(){
+        if(this.status==200){
+            var blob = xhr.response;
+            saveFile(name,blob);
+        }
+
+    }
+
+}
+function saveFile(name,blob){
+    window.requestFileSystem(LocalFileSystem.PERSISTENT, 0, function (fs){
+        //abrimos sistema de archivos
+        console.log("file system open: " + fs.name);
+        window.resolveLocalFileSystemURL( cordova.file.externalRootDirectory, function(dirEntry){
+            //vamos a la raiz del sistema '/'
+            console.log("root "+dirEntry);
+            dirEntry.geetDirectory('Download',{create:true, exclusive:false},function(dirEntry){
+                //vamos a la carpeta download
+                console.log("downloads "+dirEntry);
+                dirEntry.getFile(name,{create:true,exclusive:false}, function(fileEntry){
+                    writeFile(fileEntry,blob);
+                    //llamamos a la funcion writeFile y le pasamos el archivo a guardar
+                },
+                function(err){
+                    console.log("failed to create file");                                                                                                 
+                    console.log(err);  
+
+                });
+
+            },function(err){
+                console.log(err);
+            });
+        },function(err){
+           console.log("Error al descargar el archivo");                                                                                                    
+           console.log(err); 
+
+        });
+    },function(err){
+        console.log("Error al descargar el archivo");                                                                                                            
+        console.log(err);
+
+    });
+
+}
+
+function writeFile(fileEntry,dataObj){
+    fileEntry.createWriter(function (fileWriter) {
+         fileWriter.onwriteend = function (){
+            console.log("successful file write...");
+            app.dialog.close();
+         };
+         fileWriter.onerror=function(e){
+            console.log("Failed file write: "+e.toString());
+            app.dialog.close();
+            console.log("Error al descargar el archivo");
+
+         };
+         fileWriter.write(dataObj);
+         app.dialog.preloader("Descargando");
+
+    });
+}
+
+
+
 
 
 
@@ -227,26 +311,10 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
         //console.log('entrando a descargar');
         if($$('input[type=checkbox]:checked').length !=0){
 
-
             $$('input[type=checkbox]:checked').each(function(){
                 name = $$(this).attr('data-file');
+                descargarArchivo(name);
                 //console.log('nombre '+name+' email '+emailActual);
-                storageRef.child(emailActual+'/'+name).getDownloadURL().then(function(url){
-                    console.log(url);
-                    var xhr = new XMLHttpRequest();
-                    xhr.responseType = 'blob';
-                    xhr.onload = function(event){
-                        var blob = xhr.response;
-                    };
-                    xhr.open('GET', url);
-                    xhr.send();
-
-
-                }).catch(function(error){
-                    console.log('error '+error);
-
-                });
-
 
             });
 
