@@ -9,6 +9,11 @@
 input[type="file"]::-moz-file-upload-button{
 	height: 63px;
 	width: 87px;
+	--f7-tabbar-link-inactive-color: rgb(54, 23, 7);
 }*/
+
+*{
+	--f7-tabbar-link-inactive-color: rgb(0, 0, 0);
+}
 
 

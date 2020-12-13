@@ -88,6 +88,7 @@ function createUser(email,pass,apodo){
 
 function logIn(email,pass){
 
+
     emailActual = email;
     firebase.auth().signInWithEmailAndPassword(email, pass)
         .then(function() {
@@ -123,6 +124,25 @@ function logIn(email,pass){
 
 
 }
+
+/*function cambiarPersistenciaAuth(email,password){
+    firebase.auth().setPersistence(firebase.auth.Auth.Persistence.LOCAL)
+    .then(async function(){
+        mainView.router.navigate('/me/');
+        await recuperarDatosUsuarioLogeado();
+
+        return firebase.auth().signInWithEmailAndPassword(email, password);
+
+
+    }).catch(function(error){
+        var errorCode = error.code;
+        var errorMessage = error.message;
+
+    });
+
+
+}*/
+
 function recuperarDatosUsuarioLogeado(){
     /*db.collection('usuarios').get()
     .then(function(querySnapshot){
@@ -273,13 +293,28 @@ function writeFile(fileEntry,dataObj){
 
 
 
+function sleep(ms) {
+  return new Promise(resolve => setTimeout(resolve, ms));
+}
 
 
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
     console.log("Device is ready!");
-    //console.log(FileTransfer);
+
+
+    /*/////ESTO FUNCIONA/////
+    for(var i = 0; i<=10;i++){
+        cordova.plugins.notification.local.schedule({
+            title: 'Subiendo archivos',
+            text: 'Subidos '+i+' de 10 archivos',
+            progressBar: { value: i*10 },
+        });
+        await sleep(5000);
+
+    }*/
+
 
 });
 
@@ -300,6 +335,7 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
         firebase.auth().signOut().then(function() {
         // Sign-out successful.
         console.log('deslogeado correctamente');
+        mainView.router.back();
         }).catch(function(error) {
         // An error happened.
         });
@@ -406,13 +442,21 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
                                 // Observe state change events such as progress, pause, and resume
                                 // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
                                 var progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
-                                console.log('upload is '+progress+'% done');
+                                //console.log('upload is '+progress+'% done');
+                                //console.log(parseInt(progress));
+                                cordova.plugins.notification.local.schedule({
+                                    title: 'Subiendo archivos',
+                                    text: (i+1)+' de '+currentFiles.length,
+                                    progressBar: { value: parseInt(progress) },
+                                });
+
                                 switch(snapshot.state){
                                     case firebase.storage.TaskState.PAUSED:
                                         console.log('upload is paused');
                                         break;
                                     case firebase.storage.TaskState.RUNNING:
-                                        // console.log('upload is running'); se dispara
+                                        // console.log('upload is running'); se dispara varias veces mientras
+                                        //se sube el archivo
                                         break;
 
 
@@ -480,15 +524,20 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
+
+
+    //await logIn(email,pass);
+
     console.log('index.html');
-    $$('#btnLogin').on('click',function(){
+    $$('#btnLogin').on('click',async function(){
         var email = '';
         var pass = '';
         email = $$('#mail').val();
         pass = $$('#pass').val();
 
+        await logIn(email,pass);
         //console.log(email+' '+pass);
-        logIn(email,pass);
+        
 
 
 
