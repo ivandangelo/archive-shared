@@ -60,7 +60,7 @@ function createUser(email,pass,apodo){
 
     docUser = {
             apodo: ''+apodo,
-            foto: 'url firebase'
+            foto: 'urlPerfil'
 
      };
 
@@ -75,7 +75,7 @@ function createUser(email,pass,apodo){
             //colArchivos = db.collection('usuarios/'+email+'/archivos');
             //console.log(colArchivos);
             mainView.router.navigate('/me/');
-            
+
 
 
         })
@@ -87,6 +87,8 @@ function createUser(email,pass,apodo){
          var errorMessage = error.message;
          console.log(errorCode+' '+errorMessage);
     });
+
+
 
 }
 
@@ -113,16 +115,6 @@ function logIn(email,pass){
         //var colRefArchivosUser = db.collection('usuarios').doc(emailActual).collection('archivos');
         //console.log(colRefDatosUser);
         //console.log(colRefArchivosUser);
-        db.collection('usuarios').doc(emailActual).get().then(function(doc) {
-            if (doc.exists) {
-                //console.log('apodo '+doc.data().apodo);
-            } else {
-                // doc.data() will be undefined in this case
-                console.log("No such document!");
-            }
-        }).catch(function(error) {
-            console.log("Error getting document:", error);
-        });
         
 
 
@@ -311,9 +303,9 @@ function writeFile(fileEntry,dataObj){
 
 
 
-/*function sleep(ms) {
+function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
-}*/
+}
 
 
 
@@ -345,6 +337,21 @@ $$(document).on('page:init', function (e) {
 */
 
 // Option 2. Using live 'page:init' event handlers for each page
+
+$$(document).on('page:afterin', '.page[data-name="me"]', function (e) {
+    // Do something here when page with data-name="about" attribute loaded and initialized
+    //console.log(emailActual);
+    db.collection('usuarios').doc(emailActual).get().then(function(doc){
+        console.log(doc.id+' '+doc.data().apodo+' '+doc.data().foto);
+        $$('#mail').text(doc.id);
+        $$('#apodo').text(doc.data().apodo);
+
+
+    }).catch(function(error){
+
+    });
+
+})
 
 $$(document).on('page:init', '.page[data-name="me"]', function (e) {
 
