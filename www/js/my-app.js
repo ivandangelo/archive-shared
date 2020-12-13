@@ -16,6 +16,10 @@ var app = new Framework7({
     toolbar: {
         hideOnPageScroll: true,
     },
+    dialog: {
+        buttonOk: 'Aceptar',
+
+    },
     // Add default routes
     routes: [
       {
@@ -208,10 +212,24 @@ function recuperarDatosUsuarioLogeado(){
 
 }
 
-function descargarArchivo(nombre){
+function descargarArchivo(nombre,first){
     storageRef.child(emailActual+'/'+nombre).getDownloadURL().then(function(url){
         console.log(url);
-        downloadFileAux(nombre,url);
+        //downloadFileAux(nombre,url);
+        var fail = function (message) {    
+           alert(message)
+        }
+        var success = function (data) {
+            console.log("succes");
+
+            if(first==1){
+                app.dialog.alert(
+                'Carpeta de descarga<br>Android>data>io.framework7.myapp>files>Download',
+                'Descarga exitosa!');
+
+            }
+        }
+        cordova.plugins.DownloadManager.download(url, nombre,"" ,success, fail);
 
 
     }).catch(function(error){
@@ -223,7 +241,7 @@ function descargarArchivo(nombre){
 }
 
 
-function downloadFileAux(name,url){
+/*function downloadFileAux(name,url){
     var xhr = new XMLHttpRequest();
     xhr.open("GET",url);
     xhr.responseType='blob';
@@ -289,13 +307,13 @@ function writeFile(fileEntry,dataObj){
          app.dialog.preloader("Descargando");
 
     });
-}
+}*/
 
 
 
-function sleep(ms) {
+/*function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
-}
+}*/
 
 
 
@@ -332,6 +350,7 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
 
 
     $$('#btnSignOut').on('click',function(){
+        $$('#pass').val('');
         firebase.auth().signOut().then(function() {
         // Sign-out successful.
         console.log('deslogeado correctamente');
@@ -358,12 +377,14 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
     $$('#dwl').on('click',function(){
 
         var name = ''
+        var first = 1;
         //console.log('entrando a descargar');
         if($$('input[type=checkbox]:checked').length !=0){
 
             $$('input[type=checkbox]:checked').each(function(){
                 name = $$(this).attr('data-file');
-                descargarArchivo(name);
+                descargarArchivo(name,first);
+                first++;
                 //console.log('nombre '+name+' email '+emailActual);
 
             });
