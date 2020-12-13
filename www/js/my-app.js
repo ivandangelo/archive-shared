@@ -338,24 +338,20 @@ $$(document).on('page:init', function (e) {
 
 // Option 2. Using live 'page:init' event handlers for each page
 
-$$(document).on('page:afterin', '.page[data-name="me"]', function (e) {
-    // Do something here when page with data-name="about" attribute loaded and initialized
-    //console.log(emailActual);
+
+$$(document).on('page:init', '.page[data-name="me"]', function (e) {
+
     db.collection('usuarios').doc(emailActual).get().then(function(doc){
         console.log(doc.id+' '+doc.data().apodo+' '+doc.data().foto);
-        $$('#mail').text(doc.id);
-        $$('#apodo').text(doc.data().apodo);
+        var apodo = doc.data().apodo;
+        
+        $$('#pMail').text(doc.id);
+        $$('#pApodo').text(apodo);
 
 
     }).catch(function(error){
 
     });
-
-})
-
-$$(document).on('page:init', '.page[data-name="me"]', function (e) {
-
-
     $$('#btnSignOut').on('click',function(){
         $$('#pass').val('');
         firebase.auth().signOut().then(function() {
