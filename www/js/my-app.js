@@ -2,6 +2,7 @@
 // If we need to use custom DOM library, let's save it to $$ variable:
 var $$ = Dom7;
 
+
 var app = new Framework7({
     // App root element
     root: '#app',
@@ -33,13 +34,97 @@ var app = new Framework7({
 
     ]
     // ... other parameters
-  });
+});
 
 
 var mainView = app.views.create('.view-main');
 var db = firebase.firestore();
 var storageRef = firebase.storage().ref();
 var emailActual = '';
+
+//- With callbacks on click
+var ac5 = app.actions.create({
+    buttons: [
+
+        [
+            {
+
+                text:'Seleccione una opcion',
+                label:true,
+
+            },
+
+
+        ],
+        [
+
+            {
+
+                icon: '<i class="icon f7-icons size-22">camera</i>',
+                text: 'Camara',
+                onClick: function () {
+                    camara();
+                }
+            },
+            {
+                icon: '<i class="icon f7-icons size-22">photo</i>',
+                text: 'Galeria',
+                onClick: function(){
+                    galeria();
+
+                }
+            },
+            {
+                icon: '<i class="icon f7-icons size-22">photo</i>',
+                text: 'Eliminar foto perfil',
+                color: 'red',
+                onClick: function(){
+                    var src = $$('#setImg').attr('src');
+                    if(src != 'img/profile.png'){
+                        $$('#setImg').attr('src','img/profile.png');
+                        var fotoPerfilRef = db.collection('usuarios').doc(emailActual);
+
+                        return fotoPerfilRef.update({
+                            foto: 'urlPerfil'
+                        })
+                        .then(function() {
+                            console.log("Document successfully updated!");
+                        })
+                        .catch(function(error) {
+                            // The document probably doesn't exist.
+                            console.error("Error updating document: ", error);
+                        });
+
+
+                    }
+
+
+                }
+            }
+
+        ],
+
+        [
+
+            {
+                icon: '<i class="icon f7-icons size-22">multiply_circle</i>',
+                text: 'Cerrar',
+                color: 'red',
+                onClick: function () {
+                    ac5.close();
+
+                }
+            },
+
+        ],
+
+    ],
+    closeByOutsideClick: true,
+    animate: true,
+
+});
+
+
 //console.log(colUsuarios);
 //console.log(colArchivos);
 
@@ -60,7 +145,8 @@ function createUser(email,pass,apodo){
 
     docUser = {
             apodo: ''+apodo,
-            foto: 'urlPerfil'
+            foto: 'urlPerfil',
+            fotoCamara: false,
 
      };
 
@@ -307,6 +393,122 @@ function sleep(ms) {
   return new Promise(resolve => setTimeout(resolve, ms));
 }
 
+function subirFotoPerfil(imageURI,fuente){
+
+    var path = emailActual+'/perfil-'+emailActual;
+    archivosUsuarioRef = storageRef.child(path);
+    console.log(path);
+    var uploadTask = archivosUsuarioRef.putString(imageURI, 'base64');
+    var fotoCamara = false;
+
+    // Register three observers:
+    // 1. 'state_changed' observer, called any time the state changes
+    // 2. Error observer, called on failure
+    // 3. Completion observer, called on successful completion
+    uploadTask.on('state_changed', function(snapshot){
+      // Observe state change events such as progress, pause, and resume
+      // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
+      var progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+      console.log('Upload is ' + progress + '% done');
+      switch (snapshot.state) {
+        case firebase.storage.TaskState.PAUSED: // or 'paused'
+          console.log('Upload is paused');
+          break;
+        case firebase.storage.TaskState.RUNNING: // or 'running'
+          //console.log('Upload is running');
+          break;
+      }
+    }, function(error) {
+      // Handle unsuccessful uploads
+    }, function() {
+      // Handle successful uploads on complete
+      // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+      uploadTask.snapshot.ref.getDownloadURL().then(function(downloadURL) {
+            console.log('File available at', downloadURL);
+            if(fuente == 0){
+                var style = $$('#setImg').attr('style');
+                if(style == 'border-radius: 50%;width: 100px; height: 100px;transform: rotate(-90deg);'){
+                    $$('#setImg').attr('style','border-radius: 50%;width: 100px; height: 100px;');
+
+                }
+                $$('#setImg').attr('src',downloadURL);
+
+            }else {
+                $$('#setImg').attr('style','border-radius: 50%;width: 100px; height: 100px;transform: rotate(-90deg);');
+                $$('#setImg').attr('src',downloadURL);
+                fotoCamara = true;
+
+            }
+            var fotoPerfilRef = db.collection('usuarios').doc(emailActual);
+
+            return fotoPerfilRef.update({
+                foto: downloadURL,
+                fotoCamara: fotoCamara
+            })
+            .then(function() {
+                console.log("Document successfully updated!");
+            })
+            .catch(function(error) {
+                // The document probably doesn't exist.
+                console.error("Error updating document: ", error);
+            });
+      });
+    });
+
+
+}
+
+function camara(){
+    navigator.camera.getPicture(onSuccess,onError,
+    {
+        quality: 50,
+        destinationType: Camera.DestinationType.DATA_URL,
+        sourceType: Camera.PictureSourceType.CAMERA
+    });
+
+}
+
+function galeria(){
+    navigator.camera.getPicture(onSuccessGaleria,onError,
+    {
+        quality: 50,
+        destinationType: Camera.DestinationType.DATA_URL,
+        sourceType: Camera.PictureSourceType.PHOTOLIBRARY
+    });
+
+
+}
+
+function onSuccessGaleria(imageURI){
+    //$$('#setImg').attr('src',imageURI);
+    //console.log(imageURI);
+    //var posNombreImg = imageURI.lastIndexOf('/');
+    //console.log(posNombreImg);
+    //var nombreImg = imageURI.substring(posNombreImg+1);
+    //console.log(nombreImg);
+    subirFotoPerfil(imageURI,0);
+    //console.log(imageURI);
+
+
+}
+
+function onSuccess(imageURI) {
+    /*var image = document.getElementById('myImage');
+    image.src = imageURI;*/
+    //$$('#setImg').attr('style','border-radius: 50%;width: 100px; height: 100px;transform: rotate(-90deg);');
+    //$$('#setImg').attr('src',imageURI);
+    //console.log(imageURI);
+    //var posNombreImg = imageURI.lastIndexOf('/');
+    //console.log(posNombreImg);
+    //var nombreImg = imageURI.substring(posNombreImg+1);
+    //console.log(nombreImg);
+    subirFotoPerfil(imageURI,1);
+    //console.log(imageURI);
+}
+
+function onError(message) {
+    alert('Failed because: ' + message);
+}
 
 
 // Handle Cordova Device Ready Event
@@ -341,12 +543,31 @@ $$(document).on('page:init', function (e) {
 
 $$(document).on('page:init', '.page[data-name="me"]', function (e) {
 
-    db.collection('usuarios').doc(emailActual).get().then(function(doc){
-        console.log(doc.id+' '+doc.data().apodo+' '+doc.data().foto);
+    $$('#setImg').on('click',function(){
+
+         ac5.open();
+        //console.log('apreto img');
+
+
+    });
+
+    db.collection('usuarios').doc(emailActual).get().then( function(doc){
+        //console.log(doc.id+' '+doc.data().apodo+' '+doc.data().foto);
         var apodo = doc.data().apodo;
         
         $$('#pMail').text(doc.id);
         $$('#pApodo').text(apodo);
+        if(doc.data().foto != 'urlPerfil'){
+            if(doc.data().fotoCamara){
+            $$('#setImg').attr('src',doc.data().foto);
+            $$('#setImg').attr('style','border-radius: 50%;width: 100px; height: 100px;transform: rotate(-90deg);');
+
+
+            }else {
+                $$('#setImg').attr('src',doc.data().foto);
+            }
+
+        }
 
 
     }).catch(function(error){
@@ -418,7 +639,7 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
         //console.log('email actual'+emailActual);
         //console.log(archivoRef);
         //console.log('bucket '+archivoRef.bucket+' name '+archivoRef.name+' fullpath '+archivoRef.fullPath);
-
+        //dialog = app.dialog.progress('Subiendo archivos...');
         if(currentFiles.length!=0){
             for(let i=0;i<currentFiles.length;i++){
                 //console.log(currentFiles[i].name);
@@ -473,6 +694,10 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
                                     text: (i+1)+' de '+currentFiles.length,
                                     progressBar: { value: parseInt(progress) },
                                 });
+                                //console.log(parseInt(progress));
+                                //dialog.setProgress(parseInt(progress));
+                                //dialog.setText('Archivo '+(i+1)+' de '+currentFiles.length);
+
 
                                 switch(snapshot.state){
                                     case firebase.storage.TaskState.PAUSED:
@@ -494,6 +719,7 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
                             }, function(){
                                 // Handle successful uploads on complete
                                 // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                                dialog.close();
                                 uploadTask.snapshot.ref.getDownloadURL()
                                     .then(function(downloadURL){
                                         console.log('file available at '+downloadURL);
