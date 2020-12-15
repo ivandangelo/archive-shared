@@ -75,7 +75,7 @@ var ac5 = app.actions.create({
                 }
             },
             {
-                icon: '<i class="icon f7-icons size-22">photo</i>',
+                icon: '<i class="icon f7-icons size-22">multiply_circle</i>',
                 text: 'Eliminar foto perfil',
                 color: 'red',
                 onClick: function(){
@@ -225,7 +225,7 @@ function logIn(email,pass){
 
 }*/
 
-function recuperarDatosUsuarioLogeado(){
+async function recuperarDatosUsuarioLogeado(){
     /*db.collection('usuarios').get()
     .then(function(querySnapshot){
         querySnapshot.forEach(function(doc){
@@ -245,8 +245,10 @@ function recuperarDatosUsuarioLogeado(){
     var type = '';
     var url = '';
     var elementoAInsertar = '';
+    //console.log('recuperarDatos')
+    //console.log(emailActual);
     db.collection('usuarios').doc(emailActual).collection('archivos').get()
-    .then(function(querySnapshot){
+    .then(await function(querySnapshot){
         querySnapshot.forEach(function(doc){
             name = doc.id;
             size = doc.data().size;
@@ -277,6 +279,7 @@ function recuperarDatosUsuarioLogeado(){
 
 
             elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input data-file="'+name+'" type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
+            //console.log(elementoAInsertar);
             $$('#arbol').append(elementoAInsertar);
         });
 
@@ -510,6 +513,127 @@ function onError(message) {
     alert('Failed because: ' + message);
 }
 
+function consultarExisteArchivo(name){
+
+    return new Promise((resolve)=>{
+        db.collection("usuarios")
+            .doc(emailActual)
+            .collection('archivos')
+            .doc(name)
+            .get()
+            .then(function(doc){
+                resolve(doc);
+            })
+    })
+
+}
+
+/*async function test(){
+    var doc = await consultarExisteArchivo('CV2.docx');
+    if(doc.exists){
+        console.log('existe el archivo')
+
+    }else{
+        console.log('no existe')
+    }
+
+}*///////////////////ESTO ANDA
+
+function subirAlStorage(name,file){
+
+    /*if(doc.exists){
+        
+        msj=nameFile+' '+sizeFile;
+        //console.log(msj)
+        elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input data-file="" type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
+        $$('#arbol').append(elementoAInsertar);
+        
+
+        //agregando documento a storage
+        subirAlStorage(nameFile);
+        var path = emailActual+'/'+nameFile; //i.e ivan@mail.com/cv.docx
+        archivosUsuarioRef = storageRef.child(path);
+        var uploadTask = archivosUsuarioRef.put(currentFiles[i]);
+        // Register three observers:
+        // 1. 'state_changed' observer, called any time the state changes
+        // 2. Error observer, called on failure
+        // 3. Completion observer, called on successful completion
+        uploadTask.on('state_changed', function(snapshot){//1
+
+            var progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
+
+            cordova.plugins.notification.local.schedule({
+                title: 'Subiendo archivos',
+                text: (i+1)+' de '+currentFiles.length,
+                progressBar: { value: parseInt(progress) },
+            });
+
+            switch(snapshot.state){
+                case firebase.storage.TaskState.PAUSED:
+                    console.log('upload is paused');
+                    break;
+                case firebase.storage.TaskState.RUNNING:
+                    // console.log('upload is running'); se dispara varias veces mientras
+                    break;
+
+            }
+                    
+            }, function(error){
+                // Handle unsuccessful uploads
+
+            }, function(){
+                // Handle successful uploads on complete
+                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+                uploadTask.snapshot.ref.getDownloadURL().then( function(downloadURL) {
+                console.log('File available at', downloadURL);
+                console.log(nameFile);
+                //actualizarUrlArchivo(downloadURL,nameFile);
+
+
+            });
+
+
+        });
+    }else{
+        console.log('el archivo existe');
+    }*/
+
+}
+
+async function subirADb(data,name){
+
+    var doc = await consultarExisteArchivo(name);
+
+    //console.log(doc.exists);
+    if(!doc.exists){
+        db.collection("usuarios")
+            .doc(emailActual)
+            .collection('archivos')
+            .doc(name)
+            .set(data)
+            .then(await function(doc){
+                console.log('archivo subido correctamente a la DB');
+            });
+
+        var msj=name+' '+data.size;
+        var element = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input data-file="" type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+data.icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
+        $$('#arbol').append(element);
+
+    }else{
+        console.log('ya existe el archivo');
+    }
+
+
+    
+}
+
+function actualizarUrlArchivo(url,name){
+
+    var docArchivoRef = db.collection('usuarios').doc(emailActual).collection('archivos').doc(name);
+
+
+}
+
 
 // Handle Cordova Device Ready Event
 $$(document).on('deviceready', function() {
@@ -577,7 +701,7 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
         $$('#pass').val('');
         firebase.auth().signOut().then(function() {
         // Sign-out successful.
-        console.log('deslogeado correctamente');
+        //console.log('deslogeado correctamente');
         mainView.router.back();
         }).catch(function(error) {
         // An error happened.
@@ -589,7 +713,7 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
     console.log('me.html');
     //console.log(emailActual);
-    colRef = db.collection('usuarios/'+emailActual+'/archivos');
+
     //console.log(colUsuarios.doc(emailActual).collection('archivos'));
 
 
@@ -622,12 +746,12 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
     });//fin download
 
 
-    $$('#in').on('change',function(){
+    $$('#in').on('change', async function(){
 
 
         const obj = $$(this)[0];
         const currentFiles = obj.files;
-        //console.log(currentFiles);
+        //var colArchivosRef = db.collection('usuarios/'+emailActual+'/archivos');
         var icon = '';
         var typeFile = '';
         var nameFile = '';
@@ -635,6 +759,7 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
         var msj='';
         var elementoAInsertar= '';
         var verSiExiste
+        var url = '';
         //console.log(archivosUsuarioRef.fullPath);
         //console.log('email actual'+emailActual);
         //console.log(archivoRef);
@@ -643,134 +768,54 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
         if(currentFiles.length!=0){
             for(let i=0;i<currentFiles.length;i++){
                 //console.log(currentFiles[i].name);
-
                 typeFile = currentFiles[i].type;
                 nameFile = currentFiles[i].name;
                 sizeFile = returnFileSize(currentFiles[i].size);
-                msj=nameFile+' '+sizeFile;
 
-                db.collection('usuarios').doc(emailActual).collection('archivos').doc(nameFile).get()
-                    .then(function(doc){
-                        if(!doc.exists){
-                            console.log(emailActual+' '+nameFile);
-                            if(typeFile.includes('image')){
-                                //console.log('imagen');
-                                icon='photo';
+                //console.log(emailActual+' '+nameFile);
+                if(typeFile.includes('image')){
+                    //console.log('imagen');
+                    icon='photo';
 
-                            }else if(typeFile.includes('video')){
-                                icon='film';
+                }else if(typeFile.includes('video')){
+                    icon='film';
 
-                            }else if(typeFile.includes('text')){
-                                icon='doc_plaintext';
-                
+                }else if(typeFile.includes('text')){
+                    icon='doc_plaintext';
+    
 
-                            }else if(typeFile.includes('pdf')){
-                                icon='doc_richtext'
-                
+                }else if(typeFile.includes('pdf')){
+                    icon='doc_richtext'
+    
 
-                            }else{
-                                //default icon
-                                icon='doc'
+                }else{
+                    //default icon
+                    icon='doc'
 
-                            }
-                            //console.log(msj);
+                }
+                //console.log(msj);
+               
+                //console.log(doc.exists);
 
-                            //agregando documento a storage
-                            var path = emailActual+'/'+nameFile; //i.e ivan@mail.com/cv.docx
-                            archivosUsuarioRef = storageRef.child(path);
-                            var uploadTask = archivosUsuarioRef.put(currentFiles[i]);
-                            // Register three observers:
-                            // 1. 'state_changed' observer, called any time the state changes
-                            // 2. Error observer, called on failure
-                            // 3. Completion observer, called on successful completion
-                            uploadTask.on('state_changed',function(snapshot){//1
-                                // Observe state change events such as progress, pause, and resume
-                                // Get task progress, including the number of bytes uploaded and the total number of bytes to be uploaded
-                                var progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
-                                //console.log('upload is '+progress+'% done');
-                                //console.log(parseInt(progress));
-                                cordova.plugins.notification.local.schedule({
-                                    title: 'Subiendo archivos',
-                                    text: (i+1)+' de '+currentFiles.length,
-                                    progressBar: { value: parseInt(progress) },
-                                });
-                                //console.log(parseInt(progress));
-                                //dialog.setProgress(parseInt(progress));
-                                //dialog.setText('Archivo '+(i+1)+' de '+currentFiles.length);
+                jsFile={
+                    url: 'downloadURL',
+                    type: typeFile,
+                    size: sizeFile,
+                    icon: icon
 
-
-                                switch(snapshot.state){
-                                    case firebase.storage.TaskState.PAUSED:
-                                        console.log('upload is paused');
-                                        break;
-                                    case firebase.storage.TaskState.RUNNING:
-                                        // console.log('upload is running'); se dispara varias veces mientras
-                                        //se sube el archivo
-                                        break;
-
-
-                                }
-                                    
-
-
-                            }, function(error){
-                                // Handle unsuccessful uploads
-
-                            }, function(){
-                                // Handle successful uploads on complete
-                                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                                dialog.close();
-                                uploadTask.snapshot.ref.getDownloadURL()
-                                    .then(function(downloadURL){
-                                        console.log('file available at '+downloadURL);
-                                        docFile={
-                                            url: downloadURL,
-                                            type: typeFile,
-                                            size: sizeFile,
-                                            icon: icon
-
-                                        };
-                                        colRef.doc(nameFile).set(docFile);
-
-                                });
-
-
-                            });
-                            elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input data-file="'+nameFile+'" type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
-                            $$('#arbol').append(elementoAInsertar);
-
-
-
-                        }else {
-                            console.log('el archivo existe');
-
-                        }
-                    })
-                    .catch(function(error){
-
-                    });
+                };
+                await subirADb(jsFile,nameFile)
 
                 
-                //expected output
-                //imagen
-                //video
-                //txt
-               //pdf
-                
-
-
             }
 
-
-        }
+        }    
 
     });//fin #in
 
+})//fin me
 
 
-
-
-})
 
 $$(document).on('page:init', '.page[data-name="index"]', function (e) {
     // Do something here when page with data-name="about" attribute loaded and initialized
