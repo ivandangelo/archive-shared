@@ -539,64 +539,55 @@ function consultarExisteArchivo(name){
 
 }*///////////////////ESTO ANDA
 
-function subirAlStorage(name,file){
-
-    /*if(doc.exists){
-        
-        msj=nameFile+' '+sizeFile;
-        //console.log(msj)
-        elementoAInsertar = '<div class="treeview-item"><div class="treeview-item-root"><div class="treeview-item-content"><label class="checkbox"><input data-file="" type="checkbox"><i class="icon-checkbox"></i></label><i class="icon f7-icons">'+icon+'</i><div class="treeview-item-label"><p>'+msj+'</p></div></div></div></div>';
-        $$('#arbol').append(elementoAInsertar);
+function subirAlStorage(file){
         
 
-        //agregando documento a storage
-        subirAlStorage(nameFile);
-        var path = emailActual+'/'+nameFile; //i.e ivan@mail.com/cv.docx
-        archivosUsuarioRef = storageRef.child(path);
-        var uploadTask = archivosUsuarioRef.put(currentFiles[i]);
-        // Register three observers:
-        // 1. 'state_changed' observer, called any time the state changes
-        // 2. Error observer, called on failure
-        // 3. Completion observer, called on successful completion
-        uploadTask.on('state_changed', function(snapshot){//1
-
-            var progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
-
-            cordova.plugins.notification.local.schedule({
-                title: 'Subiendo archivos',
-                text: (i+1)+' de '+currentFiles.length,
-                progressBar: { value: parseInt(progress) },
-            });
-
-            switch(snapshot.state){
-                case firebase.storage.TaskState.PAUSED:
-                    console.log('upload is paused');
-                    break;
-                case firebase.storage.TaskState.RUNNING:
-                    // console.log('upload is running'); se dispara varias veces mientras
-                    break;
-
-            }
-                    
-            }, function(error){
-                // Handle unsuccessful uploads
-
-            }, function(){
-                // Handle successful uploads on complete
-                // For instance, get the download URL: https://firebasestorage.googleapis.com/...
-                uploadTask.snapshot.ref.getDownloadURL().then( function(downloadURL) {
-                console.log('File available at', downloadURL);
-                console.log(nameFile);
-                //actualizarUrlArchivo(downloadURL,nameFile);
+    var path = emailActual+'/'+file.name; //i.e ivan@mail.com/cv.docx
+    //console.log(path);
 
 
-            });
+    /*archivosUsuarioRef = storageRef.child(path);
+    var uploadTask = archivosUsuarioRef.put(currentFiles[i]);
+    // Register three observers:
+    // 1. 'state_changed' observer, called any time the state changes
+    // 2. Error observer, called on failure
+    // 3. Completion observer, called on successful completion
+    uploadTask.on('state_changed', function(snapshot){
+
+        var progress = (snapshot.bytesTransferred / snapshot.totalBytes)*100;
+
+        cordova.plugins.notification.local.schedule({
+            title: 'Subiendo archivos',
+            text: (i+1)+' de '+currentFiles.length,
+            progressBar: { value: parseInt(progress) },
+        });
+
+        switch(snapshot.state){
+            case firebase.storage.TaskState.PAUSED:
+                console.log('upload is paused');
+                break;
+            case firebase.storage.TaskState.RUNNING:
+                // console.log('upload is running'); se dispara varias veces mientras
+                break;
+
+        }
+                
+        }, function(error){
+            // Handle unsuccessful uploads
+
+        }, function(){
+            // Handle successful uploads on complete
+            // For instance, get the download URL: https://firebasestorage.googleapis.com/...
+            uploadTask.snapshot.ref.getDownloadURL().then( function(downloadURL) {
+            console.log('File available at', downloadURL);
+            console.log(nameFile);
+            //actualizarUrlArchivo(downloadURL,nameFile);
 
 
         });
-    }else{
-        console.log('el archivo existe');
-    }*/
+
+
+    });*/
 
 }
 
@@ -804,7 +795,8 @@ $$(document).on('page:init', '.page[data-name="me"]', function (e) {
                     icon: icon
 
                 };
-                await subirADb(jsFile,nameFile)
+                await subirADb(jsFile,nameFile);
+                await subirAlStorage(currentFiles[i]);
 
                 
             }
